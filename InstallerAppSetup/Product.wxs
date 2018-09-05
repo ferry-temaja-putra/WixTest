@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="InstallerApp Setup" Language="1033" Version="1.0.0.0" Manufacturer="Ferry-T1" UpgradeCode="571ccef7-6a41-4c9d-889e-15ca9cb50dce">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+   
+		<Feature Id="ProductFeature" Title="InstallerApp Setup" Level="1">
+			<ComponentGroupRef Id="AssemblyComponents" />
+      <ComponentGroupRef Id="ShortcutComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			
+      <Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="InstallerAppSetup" />
+			</Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="InstallerApp">                    
+        </Directory>
+      </Directory>
+      
+      <Directory Id="DesktopFolder" Name="Desktop" />
+      
+		</Directory>    
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="AssemblyComponents" Directory="INSTALLFOLDER">		
+      
+			 <Component Id="MainApp">
+         <File Source="source\InstallerApp.exe" />     
+       </Component>
+
+      <Component Id="MainApp.Config">
+        <File Source="source\InstallerApp.exe.config" />
+      </Component>
+      
+      <Component Id="HelperLibrary">
+        <File Source="source\InstallerApp.Helper.dll" />
+      </Component>
+     
+		</ComponentGroup>
+
+    <ComponentGroup Id="ShortcutComponents" Directory="ProgramMenuDir">
+      
+      <Component Id="ProgramMenuDir">
+        <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+        <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
+        <Shortcut Id="ApplicationStartMenuShortcut" Directory="ProgramMenuDir" Name="InstallerApp" Target="[#InstallerApp.exe]" WorkingDirectory='INSTALLFOLDER' />
+        <Shortcut Id="ApplicationDesktopShortcut" Directory="DesktopFolder" Name="InstallerApp" Target="[#InstallerApp.exe]" WorkingDirectory='INSTALLFOLDER' />
+      </Component>
+      
+    </ComponentGroup>
+    
+	</Fragment>
+</Wix>
